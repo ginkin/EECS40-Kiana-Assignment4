@@ -32,7 +32,8 @@ public class LoadView extends GameView implements Runnable{
         if (canvas != null){
             canvas.drawColor(Color.BLUE);
             paint.setColor(Color.YELLOW);
-            canvas.drawText(""+ LoadImage.mario.size(), 50, 50, paint);
+            paint.setTextSize(100);
+            canvas.drawText(""+ LoadImage.mario.size(), 500, 500, paint);
             this.sh.unlockCanvasAndPost(canvas);
         }
     }
