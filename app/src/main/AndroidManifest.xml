@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.zhufe.myapplication">
+    package="com.mario">
 
     <application
         android:allowBackup="true"
@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Load"
+            android:name="com.mario.load.Load"
             android:label="@string/app_name"
             android:screenOrientation="landscape">
             <intent-filter>
@@ -19,6 +19,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.mario.menu.Menu"
+            android:label="menu"
+            android:screenOrientation="landscape"  />
+        <activity
+            android:name="com.mario.ingame.Mario"
+            android:label="mario"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|keyboardHidden"  />
     </application>
 
 </manifest>
