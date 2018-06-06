@@ -15,9 +15,6 @@ public class Tile extends Sprite {
     private int i;
     private int switchtime = 4;
 
-    public int Screenheight = Methods.getScreenHeight();
-    public int newsize = Screenheight/(Test.Level1_map0.length);
-
     public Tile(float x, float y, Bitmap image, int type)
     {
         super(x, y, image);
@@ -46,12 +43,12 @@ public class Tile extends Sprite {
         switch(type)
         {
             case 21:
-                image = Methods.zoomImg(LoadImage.tile.get(i),newsize,newsize);
+                image = Methods.zoomImg(LoadImage.tile.get(i),Methods.getnewsize(),Methods.getnewsize());
                 TimeToSwitch();
                 if(i > 11 ) {i = 8;}
                 break;
             case 17:
-                image = Methods.zoomImg(LoadImage.tile.get(i),newsize,newsize);
+                image = Methods.zoomImg(LoadImage.tile.get(i),Methods.getnewsize(),Methods.getnewsize());
                 TimeToSwitch();
                 if(i > 11 ) {i = 8;}
                 break;

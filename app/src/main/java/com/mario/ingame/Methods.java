@@ -6,6 +6,12 @@ import android.graphics.Matrix;
 
 public class Methods {
 
+    private static int newsize = getScreenHeight()/15;
+
+    public static int getnewsize(){
+        return newsize;
+    }
+
     public static int getScreenWidth() {
         return Resources.getSystem().getDisplayMetrics().widthPixels;
     }

@@ -10,7 +10,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
 import com.mario.R;
-import com.mario.ingame.Mario;
+import com.mario.ingame.InGame;
 import com.mario.load.Load;
 import com.mario.load.LoadImage;
 
@@ -62,7 +62,7 @@ public class MenuView extends GameView implements Runnable
     public boolean onTouchEvent(MotionEvent event)
     {
         if(this.Start.OnTouch(event.getX(), event.getY())) {
-            Intent startgame = new Intent(this.getContext(),Mario.class);
+            Intent startgame = new Intent(this.getContext(),InGame.class);
             this.getContext().startActivity(startgame);
         }
         else if(this.Quit.OnTouch(event.getX(), event.getY()))

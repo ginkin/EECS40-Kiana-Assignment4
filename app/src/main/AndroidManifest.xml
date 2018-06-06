@@ -24,7 +24,7 @@
             android:label="menu"
             android:screenOrientation="landscape"  />
         <activity
-            android:name="com.mario.ingame.Mario"
+            android:name="com.mario.ingame.InGame"
             android:label="mario"
             android:screenOrientation="landscape"
             android:configChanges="orientation|keyboardHidden"  />

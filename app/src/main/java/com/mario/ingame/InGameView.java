@@ -18,13 +18,15 @@ import java.util.ArrayList;
 
 import game.view.GameView;
 
-public class MarioView extends GameView implements Runnable {
+public class InGameView extends GameView implements Runnable {
 
     private ArrayList<Level> levels = new ArrayList<Level>();
 
     private Level currentLevel;
 
-    public MarioView(Context context)
+    private Mario mario;
+
+    public InGameView(Context context)
     {
         super(context);
         this.setKeepScreenOn(true);
@@ -36,8 +38,10 @@ public class MarioView extends GameView implements Runnable {
         }
 
         currentLevel = levels.get(0);
-    }
 
+
+        mario = new Mario(Methods.getnewsize(),Methods.getnewsize(),Methods.zoomImg(LoadImage.mario.get(0),Methods.getnewsize(),Methods.getnewsize()));
+    }
 
 
 
@@ -70,6 +74,11 @@ public class MarioView extends GameView implements Runnable {
                 drawtile.Draw(canvas);
                 drawtile.SwitchImage();
             }
+
+            mario.Draw(canvas);
+            mario.Move();
+            mario.SwitchImage();
+
             this.sh.unlockCanvasAndPost(canvas);
         }
     }
@@ -78,6 +87,14 @@ public class MarioView extends GameView implements Runnable {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
+        mario.onKeyDown(keyCode, event);
+        return true;
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event)
+    {
+        mario.onKeyUp(keyCode, event);
         return true;
     }
 
