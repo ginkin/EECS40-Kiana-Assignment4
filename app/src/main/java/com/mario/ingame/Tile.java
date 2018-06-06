@@ -1,5 +1,6 @@
 package com.mario.ingame;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 
 import com.mario.load.LoadImage;
@@ -13,6 +14,9 @@ public class Tile extends Sprite {
     private int type;
     private int i;
     private int switchtime = 4;
+
+    public int Screenheight = Methods.getScreenHeight();
+    public int newsize = Screenheight/(Test.Level1_map0.length);
 
     public Tile(float x, float y, Bitmap image, int type)
     {
@@ -42,12 +46,12 @@ public class Tile extends Sprite {
         switch(type)
         {
             case 21:
-                image = LoadImage.tile.get(i);
+                image = Methods.zoomImg(LoadImage.tile.get(i),newsize,newsize);
                 TimeToSwitch();
                 if(i > 11 ) {i = 8;}
                 break;
             case 17:
-                image = LoadImage.tile.get(i);
+                image = Methods.zoomImg(LoadImage.tile.get(i),newsize,newsize);
                 TimeToSwitch();
                 if(i > 11 ) {i = 8;}
                 break;

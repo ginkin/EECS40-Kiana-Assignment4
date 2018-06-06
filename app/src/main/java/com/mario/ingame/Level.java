@@ -16,7 +16,8 @@ public class Level {
             return tile;
         }
 
-
+        public int Screenheight = Methods.getScreenHeight();
+        public int newsize = Screenheight/(Test.Level1_map0.length);
 
         public Level(int level)
         {
@@ -33,9 +34,6 @@ public class Level {
 
         }
 
-
-
-
         public void CreatTile(int maparray[][])
         {
             for(int i=0; i<maparray.length; i++)
@@ -44,8 +42,9 @@ public class Level {
                 {
                     if(maparray[i][j] > 0)
                     {
-                        Tile newtile = new Tile(j*16, i*16,GetImage(maparray[i][j]),maparray[i][j]);
-                        this.tile.add(newtile);
+                        //Tile newtile = new Tile(j*16, i*16,GetImage(maparray[i][j]),maparray[i][j]);
+                        Tile newtile = new Tile(j*newsize, i*newsize, Methods.zoomImg(GetImage(maparray[i][j]),newsize,newsize),maparray[i][j]);
+                        tile.add(newtile);
                     }
                 }
             }

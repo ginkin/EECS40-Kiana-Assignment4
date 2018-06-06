@@ -1,9 +1,16 @@
 package com.mario.ingame;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.SurfaceHolder;
+import android.view.WindowManager;
 
 import com.mario.load.LoadImage;
 
@@ -59,9 +66,9 @@ public class MarioView extends GameView implements Runnable {
             canvas.drawBitmap(LoadImage.map.get(0), 0, 0, null);
             for(int i=0; i<currentLevel.getTile().size(); i++)
             {
-                Tile tile = currentLevel.getTile().get(i);
-                tile.Draw(canvas);
-                tile.SwitchImage();
+                Tile drawtile = currentLevel.getTile().get(i);
+                drawtile.Draw(canvas);
+                drawtile.SwitchImage();
             }
             this.sh.unlockCanvasAndPost(canvas);
         }
