@@ -52,7 +52,7 @@ public class InGameView extends GameView implements Runnable {
         currentLevel = levels.get(0);
 
 
-        mario = new Mario(Methods.getnewsize(),Methods.getScreenHeight()-3  *Methods.getnewsize(),Methods.zoomImg(LoadImage.mario.get(0),Methods.getnewsize(),Methods.getnewsize()));
+        mario = new Mario(0,Methods.getScreenHeight()-3  *Methods.getnewsize(),Methods.zoomImg(LoadImage.mario.get(0),Methods.getnewsize(),Methods.getnewsize()));
     }
 
 
@@ -82,8 +82,10 @@ public class InGameView extends GameView implements Runnable {
             for(int i=0; i<currentLevel.getTile().size(); i++)
             {
                 Tile drawtile = currentLevel.getTile().get(i);
-                drawtile.Draw(canvas);
-                drawtile.SwitchImage();
+                if(drawtile.x>=-Methods.getnewsize()&&drawtile.x<=Methods.getScreenWidth()){
+                    drawtile.Draw(canvas);
+                    drawtile.SwitchImage();
+                }
             }
 
             mario.Draw(canvas);
@@ -149,21 +151,6 @@ public class InGameView extends GameView implements Runnable {
             mario.setState("Rstop");
         }
     }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
-        mario.onKeyDown(keyCode, event);
-        return true;
-    }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event)
-    {
-        mario.onKeyUp(keyCode, event);
-        return true;
-    }
-
 
     @Override
     public void run()

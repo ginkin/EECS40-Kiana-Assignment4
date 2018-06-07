@@ -16,23 +16,16 @@ public class Mario extends Sprite {
     private int i;
     private int switchtime;
 
-    public String getState() {
-        return state;
-    }
-
     public void setState(String state) {
         this.state = state;
     }
 
-    public int getxSpeed() {
-        return xSpeed;
-    }
 
     public Mario(float x, float y, Bitmap image) {
         super(x, y, image);
         this.status = 1;
         this.hp = 1;
-        this.xSpeed = Methods.getnewsize();
+        this.xSpeed = Methods.getnewsize()/3;
         this.lives = 3;
         this.switchtime = 2;
         this.state = "Rstop";
@@ -57,7 +50,7 @@ public class Mario extends Sprite {
             if (this.x < Methods.getScreenWidth() / 2) {
                 this.x += this.xSpeed;
             } else {
-                if (Tile.getMovecount() != Test.getmaparray(gv.getCurrentLevel().getLevel())[0].length * Methods.getnewsize() - Methods.getScreenWidth()) {
+                if (Tile.getMovecount() < (Test.getmaparray(gv.getCurrentLevel().getLevel())[0].length-1) * Methods.getnewsize() - Methods.getScreenWidth()) {
                     Tile.Shift(gv, this.state, this.xSpeed);
                 } else {
                     if (this.x < Methods.getScreenWidth() - this.image.getWidth()) {
@@ -105,56 +98,4 @@ public class Mario extends Sprite {
         }
     }
 
-    public void TouchDown(int x){
-        if(this.hp < 0) return ;
-
-        if(x<Methods.getScreenWidth()/4){
-            this.state = "Lmove";
-        }else if(x>Methods.getScreenWidth()/4&&x<(Methods.getScreenWidth()/2)){
-            this.state = "Rmove";
-        }
-    }
-
-    public void TouchUp(int x){
-        if(this.hp < 0) return ;
-
-        if(x<Methods.getScreenWidth()/4){
-            this.state = "Lstop";
-        }else if(x>Methods.getScreenWidth()/4&&x<(Methods.getScreenWidth()/2)){
-            this.state = "Rstop";
-        }
-    }
-
-    public void onKeyDown(int keyCode, KeyEvent event)
-    {
-        if(this.hp < 0) return ;
-
-        switch(keyCode)
-        {
-            case KeyEvent.KEYCODE_DPAD_LEFT :
-                this.state = "Lmove";
-                break;
-
-            case KeyEvent.KEYCODE_DPAD_RIGHT :
-                this.state = "Rmove";
-                break;
-        }
-
-    }
-
-    public void onKeyUp(int keyCode, KeyEvent event)
-    {
-        if(this.hp < 0) return ;
-
-        switch(keyCode)
-        {
-            case KeyEvent.KEYCODE_DPAD_LEFT :
-                this.state = "Lstop";
-                break;
-
-            case KeyEvent.KEYCODE_DPAD_RIGHT :
-                this.state = "Rstop";
-                break;
-        }
-    }
 }
