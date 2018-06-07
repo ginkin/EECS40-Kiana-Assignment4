@@ -7,6 +7,7 @@ import com.mario.load.LoadImage;
 import java.util.ArrayList;
 
 public class Level {
+
         private int Level;
 
         private ArrayList<Tile> tile = new ArrayList<Tile>();
@@ -14,6 +15,10 @@ public class Level {
         public ArrayList<Tile> getTile()
         {
             return tile;
+        }
+
+        public int getLevel() {
+            return Level;
         }
 
         public Level(int level)

@@ -1,6 +1,12 @@
 package com.mario.ingame;
 
 public class Test {
+
+    public static int[][] getmaparray(int index) {
+        if(index == 1)return Level1_map0;
+        return Level1_map0;
+    }
+
     static int Level1_map0[][] = {
             { 147, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

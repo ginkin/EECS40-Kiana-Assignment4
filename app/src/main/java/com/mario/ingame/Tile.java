@@ -14,6 +14,11 @@ public class Tile extends Sprite {
     private int type;
     private int i;
     private int switchtime = 4;
+    private static int movecount;
+
+    public static int getMovecount() {
+        return movecount;
+    }
 
     public Tile(float x, float y, Bitmap image, int type)
     {
@@ -35,6 +40,45 @@ public class Tile extends Sprite {
                 break;
         }
 
+    }
+//
+//    public static void Move(InGameView gv)
+//    {
+//        if(gv.getMario().hp == 0) return;
+//
+//        if(gv.getMario().getState().equals(""))
+//        {
+//            for(int i=0; i<gv.getCurrentLevel().getTile().size(); i++)
+//            {
+//                Tile t = gv.getCurrentLevel().getTile().get(i);
+//                t.x -= gv.getMario().getxSpeed();
+//            }
+//            movecount+= gv.getMario().getxSpeed();
+//        }
+//        else if(gv.getMario().getState().equals("����"))
+//        {
+//            for(int i=0; i<gv.getCurrentLevel().getTile().size(); i++)
+//            {
+//                Tile t = gv.getCurrentLevel().getTile().get(i);
+//                t.x += gv.getMario().getxSpeed();
+//            }
+//            movecount-= gv.getMario().getxSpeed();
+//        }
+//    }
+
+    public static void Shift(InGameView gv, String state, Integer speed){
+        if(state.equals("Rmove")){
+            for (Tile t:gv.getCurrentLevel().getTile()) {
+                t.x -= speed;
+            }
+            movecount += speed;
+        }
+        else if(state.equals("Lmove")){
+            for (Tile t:gv.getCurrentLevel().getTile()) {
+                t.x += speed;
+            }
+            movecount -= speed;
+        }
     }
 
     public void SwitchImage()
