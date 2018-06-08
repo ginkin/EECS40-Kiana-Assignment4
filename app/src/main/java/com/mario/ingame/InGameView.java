@@ -85,6 +85,7 @@ public class InGameView extends GameView implements Runnable {
                 if(drawtile.x>=-Methods.getnewsize()&&drawtile.x<=Methods.getScreenWidth()){
                     drawtile.Draw(canvas);
                     drawtile.SwitchImage();
+                    drawtile.Jump();
                 }
             }
 

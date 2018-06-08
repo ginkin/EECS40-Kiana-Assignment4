@@ -5,16 +5,25 @@ import android.graphics.Bitmap;
 
 import com.mario.load.LoadImage;
 
+import java.util.ArrayList;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 import game.sprite.Sprite;
 
 public class Tile extends Sprite {
 
     private int type;
-    private int i;
+    private int i,i2;
     private int switchtime = 4;
     private static int movecount;
+
+    private int jumptime;
+
+    public void setJumpTime(int jumpTime) {
+        this.jumptime = jumpTime;
+    }
+    int movestep[] = {-6,-4,-2,0,2,4,6};
 
     public static int getMovecount() {
         return movecount;
@@ -24,7 +33,6 @@ public class Tile extends Sprite {
     {
         super(x, y, image);
         this.type = type;
-
         switch(type)
         {
             case 21:
@@ -41,6 +49,7 @@ public class Tile extends Sprite {
         }
 
     }
+
 //
 //    public static void Move(InGameView gv)
 //    {
@@ -65,6 +74,24 @@ public class Tile extends Sprite {
 //            movecount-= gv.getMario().getxSpeed();
 //        }
 //    }
+
+    public void Jump()
+    {
+        if(this.jumptime > 0)
+        {
+            this.y += movestep[i2];
+            if(i2 < movestep.length - 1)
+            {
+                i2++;
+            }
+            else
+            {
+                this.jumptime = 0;
+                i2 = 0;
+            }
+        }
+    }
+
 
     public static void Shift(InGameView gv, String state, Integer speed){
         if(state.equals("Rmove")){

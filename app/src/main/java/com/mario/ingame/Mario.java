@@ -30,7 +30,7 @@ public class Mario extends Sprite {
         super(x, y, image);
         this.status = 1;
         this.hp = 1;
-        this.xSpeed = Methods.getnewsize()/3;
+        this.xSpeed = Methods.getnewsize()/4;
         this.lives = 3;
         this.switchtime = 2;
         this.state = "Rstop";
@@ -86,7 +86,7 @@ public class Mario extends Sprite {
     public void JumpEvent(){
         if(this.hp < 0) return;
         if(jumpstate.equals("")){
-            jumptime = 11;
+            jumptime = 15;
             ySpeed = Methods.getnewsize()/2;
             jumpstate = "jumping";
         }
@@ -113,8 +113,7 @@ public class Mario extends Sprite {
         }
         else if(this.jumpstate.equals("jumping"))
         {
-            if(this.status == 1)
-            {
+            if(this.status == 1){
                 this.image = LoadImage.mario.get(2);
             }
         }
@@ -138,6 +137,7 @@ public class Mario extends Sprite {
                     if(this.x > t.x - Methods.getnewsize() && this.x < t.x + Methods.getnewsize() && this.y + 11/16*Methods.getnewsize() > t.y)
                     {
                         jumptime = 0;
+                        t.setJumpTime(1);
                     }
 
                     if(y >  t.y - image.getHeight() && x < t.x )
