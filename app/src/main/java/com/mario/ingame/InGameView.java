@@ -52,7 +52,7 @@ public class InGameView extends GameView implements Runnable {
         currentLevel = levels.get(0);
 
 
-        mario = new Mario(0,Methods.getScreenHeight()-3  *Methods.getnewsize(),Methods.zoomImg(LoadImage.mario.get(0),Methods.getnewsize(),Methods.getnewsize()));
+        mario = new Mario(Methods.getnewsize(),Methods.getScreenHeight()-5  *Methods.getnewsize(),Methods.zoomImg(LoadImage.mario.get(0),Methods.getnewsize(),Methods.getnewsize()*2));
     }
 
 
@@ -157,6 +157,7 @@ public class InGameView extends GameView implements Runnable {
     {
         while(flag)
         {
+            mario.Collision(this);
             this.Draw();
             try {
                 Thread.sleep(25);

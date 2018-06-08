@@ -2,6 +2,7 @@ package com.mario.ingame;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.view.KeyEvent;
 import com.mario.load.LoadImage;
 
@@ -15,6 +16,8 @@ public class Mario extends Sprite {
     private String state;
     private int i;
     private int switchtime;
+    private Rect frame;
+    private boolean landed,canleft,canright;
 
     public void setState(String state) {
         this.state = state;
@@ -29,6 +32,7 @@ public class Mario extends Sprite {
         this.lives = 3;
         this.switchtime = 2;
         this.state = "Rstop";
+        this.frame = new Rect(0,11/16*Methods.getnewsize(),Methods.getnewsize(),2*Methods.getnewsize());
     }
 
     public void Draw(Canvas canvas) {
@@ -46,7 +50,7 @@ public class Mario extends Sprite {
 
     public void Move(InGameView gv){
         if(this.hp < 0) return;
-        if(state.equals("Rmove")) {
+        if(state.equals("Rmove")&&canright) {
             if (this.x < Methods.getScreenWidth() / 2) {
                 this.x += this.xSpeed;
             } else {
@@ -59,7 +63,7 @@ public class Mario extends Sprite {
                 }
             }
         }
-        else if(this.state.equals("Lmove")) {
+        else if(this.state.equals("Lmove")&&canleft) {
             if(this.x > Methods.getScreenWidth()/2) {
                 this.x -=this.xSpeed;
             }
@@ -79,11 +83,10 @@ public class Mario extends Sprite {
     public void SwitchImage() {
         if (this.hp < 0) return;
 
-        this.switchtime--;
-
+        switchtime--;
         if (this.state.equals("Rmove") || this.state.equals("Lmove")) {
             if (this.status == 1) {
-                this.image = Methods.zoomImg(LoadImage.mario.get(i), Methods.getnewsize(), Methods.getnewsize());
+                this.image = Methods.zoomImg(LoadImage.mario.get(i), Methods.getnewsize(), Methods.getnewsize()*2);
                 if (this.switchtime <= 0) {
                     i++;
                     this.switchtime = 2;
@@ -93,8 +96,38 @@ public class Mario extends Sprite {
         }
         else if (this.state.equals("Rstop") || this.state.equals("Lstop")) {
             if (this.status == 1) {
-                this.image = Methods.zoomImg(LoadImage.mario.get(0),Methods.getnewsize(),Methods.getnewsize());
+                this.image = Methods.zoomImg(LoadImage.mario.get(0),Methods.getnewsize(),Methods.getnewsize()*2);
             }
+        }
+    }
+
+    public void Collision(InGameView gv){
+        landed = false;
+        canleft = true;
+        canright = true;
+        for (Tile t: gv.getCurrentLevel().getTile()) {
+            if(t.x > x - image.getWidth()*2 && t.x < x + image.getWidth()*2){
+                if(t.MoreRectangle_CollisionWithSprite(this, frame)){
+                    if(x > t.x - Methods.getnewsize() && x < t.x + Methods.getnewsize()&& this.y + 11/16*Methods.getnewsize() < t.y)
+                    {
+                        this.y = t.y - this.image.getHeight();
+                        landed= true;
+                    }
+
+                    if(y >  t.y - image.getHeight() && x < t.x )
+                    {
+                        canright = false;
+                    }
+
+                    else if(y > t.y - image.getHeight() && x > t.x )
+                    {
+                        canleft = false;
+                    }
+                }
+            }
+        }
+        if(!landed){
+            y += xSpeed*3/4;
         }
     }
 
