@@ -49,8 +49,7 @@ public class Tile extends Sprite {
         }
 
     }
-
-//
+    
 //    public static void Move(InGameView gv)
 //    {
 //        if(gv.getMario().hp == 0) return;
