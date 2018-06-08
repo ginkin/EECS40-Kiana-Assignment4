@@ -98,35 +98,33 @@ public class InGameView extends GameView implements Runnable {
 
     public boolean onTouchEvent(MotionEvent e){
 
-        float touchdown1x, touchdown1y, touchdown2x, touchdown2y;
-        float touchup1x, touchup1y, touchup2x, touchup2y;
         mActivePointerId = e.getPointerId(0);
-        int pointerIndex = e.findPointerIndex(mActivePointerId);
+        int pointerCount = e.getPointerCount();
 
-        switch(e.getAction()){
-            case MotionEvent.ACTION_DOWN:
-                touchdown1x = e.getX();
-                touchdown1y = e.getY();
-                TouchDown(touchdown1x);
-                break;
+        for (int i = 0; i < pointerCount; i++) {
+            float x = e.getX(i);
+            float y = e.getY(i);
+            switch(e.getAction()){
+                case MotionEvent.ACTION_DOWN:
+                    TouchDown(x);
+                    break;
 
-            case MotionEvent.ACTION_POINTER_DOWN:
-                touchdown2x = e.getX(pointerIndex);
-                touchdown2y = e.getY(pointerIndex);
-                TouchDown(touchdown2x);
-                break;
+                case MotionEvent.ACTION_POINTER_DOWN:
+                    TouchDown(x);
+                    break;
 
-            case MotionEvent.ACTION_UP:
-                touchup1x = e.getX();
-                touchup1y = e.getY();
-                TouchUp(touchup1x);
-                break;
+                case MotionEvent.ACTION_POINTER_UP:
+                    TouchUp(x);
+                    break;
 
-            case MotionEvent.ACTION_POINTER_UP:
-                touchup2x = e.getX();
-                touchup2y = e.getY();
-                TouchUp(touchup2x);
-                break;
+                case MotionEvent.ACTION_UP:
+                    TouchUp(x);
+                    break;
+
+                case MotionEvent.ACTION_MOVE:
+                    TouchDown(x);
+                    break;
+            }
         }
 
         return true;
@@ -139,6 +137,8 @@ public class InGameView extends GameView implements Runnable {
             mario.setState("Lmove");
         }else if(x>Methods.getScreenWidth()/6&&x<(Methods.getScreenWidth()/2)){
             mario.setState("Rmove");
+        }else if(x>Methods.getScreenWidth()*5/6 && x<(Methods.getScreenWidth())){
+            mario.JumpEvent();
         }
     }
 
@@ -158,6 +158,7 @@ public class InGameView extends GameView implements Runnable {
         while(flag)
         {
             mario.Collision(this);
+            mario.Jump();
             this.Draw();
             try {
                 Thread.sleep(25);

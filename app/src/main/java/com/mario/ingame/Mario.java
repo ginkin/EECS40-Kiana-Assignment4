@@ -18,6 +18,8 @@ public class Mario extends Sprite {
     private int switchtime;
     private Rect frame;
     private boolean landed,canleft,canright;
+    private String jumpstate;
+    private int jumptime;
 
     public void setState(String state) {
         this.state = state;
@@ -33,6 +35,7 @@ public class Mario extends Sprite {
         this.switchtime = 2;
         this.state = "Rstop";
         this.frame = new Rect(0,11/16*Methods.getnewsize(),Methods.getnewsize(),2*Methods.getnewsize());
+        this.jumpstate = "";
     }
 
     public void Draw(Canvas canvas) {
@@ -80,6 +83,15 @@ public class Mario extends Sprite {
         }
     }
 
+    public void JumpEvent(){
+        if(this.hp < 0) return;
+        if(jumpstate.equals("")){
+            jumptime = 11;
+            ySpeed = Methods.getnewsize()/2;
+            jumpstate = "jumping";
+        }
+    }
+
     public void SwitchImage() {
         if (this.hp < 0) return;
 
@@ -99,6 +111,13 @@ public class Mario extends Sprite {
                 this.image = Methods.zoomImg(LoadImage.mario.get(0),Methods.getnewsize(),Methods.getnewsize()*2);
             }
         }
+        else if(this.jumpstate.equals("jumping"))
+        {
+            if(this.status == 1)
+            {
+                this.image = LoadImage.mario.get(2);
+            }
+        }
     }
 
     public void Collision(InGameView gv){
@@ -110,8 +129,15 @@ public class Mario extends Sprite {
                 if(t.MoreRectangle_CollisionWithSprite(this, frame)){
                     if(x > t.x - Methods.getnewsize() && x < t.x + Methods.getnewsize()&& this.y + 11/16*Methods.getnewsize() < t.y)
                     {
-                        this.y = t.y - this.image.getHeight();
+                        y = t.y - image.getHeight();
                         landed= true;
+                        jumpstate = "";
+                        if(jumptime <=0) ySpeed = 0;
+                    }
+
+                    if(this.x > t.x - Methods.getnewsize() && this.x < t.x + Methods.getnewsize() && this.y + 11/16*Methods.getnewsize() > t.y)
+                    {
+                        jumptime = 0;
                     }
 
                     if(y >  t.y - image.getHeight() && x < t.x )
@@ -126,8 +152,23 @@ public class Mario extends Sprite {
                 }
             }
         }
-        if(!landed){
-            y += xSpeed*3/4;
+    }
+
+    public void Jump(){
+        if(jumptime <= 0)
+        {
+            if(!landed){
+                y += ySpeed;
+                if(ySpeed < Methods.getnewsize()/2) ySpeed++;
+                jumpstate = "jumping ";
+            }
+        }
+        else if(jumptime > 0)
+        {
+            this.jumpstate = "jumping";
+            this.y-= ySpeed;
+            if(this.ySpeed > 0) this.ySpeed--;
+            jumptime --;
         }
     }
 
