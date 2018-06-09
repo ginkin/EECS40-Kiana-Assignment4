@@ -13,12 +13,26 @@ import game.sprite.Sprite;
 
 public class Tile extends Sprite {
 
+    public int getType() {
+        return type;
+    }
+
     private int type;
     private int i,i2;
     private int switchtime = 4;
     private static int movecount;
 
     private int jumptime;
+
+    public void setCollision(int collision) {
+        this.collision = collision;
+    }
+
+    public int getCollision() {
+        return collision;
+    }
+
+    private int collision;
 
     public void setJumpTime(int jumpTime) {
         this.jumptime = jumpTime;
@@ -37,6 +51,7 @@ public class Tile extends Sprite {
         {
             case 21:
                 this.i= 8;
+                this.collision = 1;
                 break;
 
             case 17:
@@ -49,7 +64,7 @@ public class Tile extends Sprite {
         }
 
     }
-    
+
 //    public static void Move(InGameView gv)
 //    {
 //        if(gv.getMario().hp == 0) return;
@@ -112,10 +127,15 @@ public class Tile extends Sprite {
         switchtime -- ;
         switch(type)
         {
-            case 21:
-                image = Methods.zoomImg(LoadImage.tile.get(i),Methods.getnewsize(),Methods.getnewsize());
-                TimeToSwitch();
-                if(i > 11 ) {i = 8;}
+            case 21: // "?" Block
+                if(this.collision > 0){
+                    image = Methods.zoomImg(LoadImage.tile.get(i),Methods.getnewsize(),Methods.getnewsize());
+                    TimeToSwitch();
+                    if(i > 11 ) {i = 8;}
+                }
+                else{
+                    image = Methods.zoomImg(LoadImage.tile.get(7),Methods.getnewsize(),Methods.getnewsize());
+                }
                 break;
             case 17:
                 image = Methods.zoomImg(LoadImage.tile.get(i),Methods.getnewsize(),Methods.getnewsize());

@@ -18,6 +18,7 @@ import com.mario.load.LoadImage;
 
 import java.util.ArrayList;
 
+import game.sprite.Sprite;
 import game.view.GameView;
 
 public class InGameView extends GameView implements Runnable {
@@ -86,6 +87,15 @@ public class InGameView extends GameView implements Runnable {
                     drawtile.Draw(canvas);
                     drawtile.SwitchImage();
                     drawtile.Jump();
+                }
+            }
+
+            for (Sprite s: Level.item) {
+                if(s instanceof Item){
+                    Item it = (Item)s;
+                    it.Jump();
+                    it.Draw(canvas);
+                    it.SwitchImage();
                 }
             }
 

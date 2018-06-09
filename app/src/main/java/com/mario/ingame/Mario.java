@@ -138,6 +138,12 @@ public class Mario extends Sprite {
                     {
                         jumptime = 0;
                         t.setJumpTime(1);
+                        if(t.getType() == 21){
+                            if(t.getCollision() > 0)
+                            Level.item.add(new Item(t.x,t.y,Methods.zoomImg(LoadImage.food.get(1),Methods.getnewsize(),Methods.getnewsize()),1, t));
+                            t.setCollision(t.getCollision()-1);
+                        }
+
                     }
 
                     if(y >  t.y - image.getHeight() && x < t.x )

@@ -6,6 +6,8 @@ import com.mario.load.LoadImage;
 
 import java.util.ArrayList;
 
+import game.sprite.Sprite;
+
 public class Level {
 
         private int Level;
@@ -20,6 +22,8 @@ public class Level {
         public int getLevel() {
             return Level;
         }
+
+        static ArrayList<Sprite> item = new ArrayList<Sprite>();
 
         public Level(int level)
         {
