@@ -6,13 +6,12 @@ import com.mario.load.LoadImage;
 
 public class Item extends Tile {
 
+
     private int jump;
 
-    public int Gettype() {
-        return type;
-    }
-
-    private int type;
+    public int Gettype() { return type; }
+    public int getJump() { return jump; }
+    int type;
     private int i,i2;
     private String direction;
     private Tile t;
@@ -28,6 +27,7 @@ public class Item extends Tile {
         this.t  = t;
         this.type = type;
         direction = "R";
+        this.hp =1;
     }
 
     @Override

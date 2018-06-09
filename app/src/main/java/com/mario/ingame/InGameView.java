@@ -92,12 +92,14 @@ public class InGameView extends GameView implements Runnable {
             }
             canvas.drawText(String.valueOf(Background.speed), 330, 430, paint);
             for (Sprite s: Level.item) {
-                if(s instanceof Item){
+                if(s.hp>0){
                     Item it = (Item)s;
                     it.Jump();
                     it.Draw(canvas);
                     it.SwitchImage();
                     it.Move(this);
+                }else{
+                    Level.item.remove(s);
                 }
             }
 
@@ -106,6 +108,43 @@ public class InGameView extends GameView implements Runnable {
             mario.SwitchImage();
 
             this.sh.unlockCanvasAndPost(canvas);
+        }
+    }
+
+    public void ItemCollision()
+    {
+        mario.Collision(this);
+
+        if(this.mario.hp > 0)
+        {
+            for (Sprite s: Level.item) {
+                Item it = (Item) s;
+                if(it.type == 2){
+                    if(it.getJump() == 16)
+                    {
+                        if(it.MoreRectangle_CollisionWithSprite(mario, mario.getFrame()))
+                        {
+                            it.hp = 0;
+                            if(mario.status< 2)
+                            {
+                                mario.status+=1;
+                            }
+                        }
+                    }
+                } else if(it.type == 1){
+                    if(it.getJump() == 16)
+                    {
+                        if(it.MoreRectangle_CollisionWithSprite(mario, mario.getFrame()))
+                        {
+                            it.hp = 0;
+                            if(mario.status< 3)
+                            {
+                                mario.status+=1;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -171,6 +210,7 @@ public class InGameView extends GameView implements Runnable {
         while(flag)
         {
             mario.Collision(this);
+            this.ItemCollision();
             Background.Stop(mario);
             mario.Jump();
             this.Draw();

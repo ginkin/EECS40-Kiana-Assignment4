@@ -45,7 +45,7 @@ public class Level {
                     canvas = new Canvas(backimg);
                     canvas.drawColor(Color.WHITE);
                     for (int i = 0; i < 15 ; i++) {
-                        canvas.drawBitmap(LoadImage.map.get(level), Methods.getScreenWidth()*i,   0 ,null);
+                        canvas.drawBitmap(LoadImage.map.get(level-1), Methods.getScreenWidth()*i,   0 ,null);
                     }
                     this.bk.add(new Background(0,0,backimg));
                     break;

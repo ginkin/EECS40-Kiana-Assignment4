@@ -11,23 +11,23 @@ import game.sprite.Sprite;
 public class Mario extends Sprite {
 
     private int xSpeed, ySpeed;
-    private int status;
+
+
+
+    public int status;
     private int lives;
-
-
-
     private String state;
-    private int i;
+    private int i,i2,i3;
     private int switchtime;
+
+    public Rect getFrame() { return frame; }
     private Rect frame;
     boolean landed,canleft,canright;
     private String jumpstate;
     private int jumptime;
     int shiftspeed;
 
-    public void setState(String state) {
-        this.state = state;
-    }
+    public void setState(String state) { this.state = state; }
     public String getState() { return state; }
 
     public Mario(float x, float y, Bitmap image) {
@@ -105,7 +105,7 @@ public class Mario extends Sprite {
         if (this.hp < 0) return;
 
         switchtime--;
-        if (this.state.equals("Rmove") || this.state.equals("Lmove")) {
+        if (this.state.equals("Rmove") &&!this.jumpstate.equals("jumping")|| this.state.equals("Lmove")&&!this.jumpstate.equals("jumping")) {
             if (this.status == 1) {
                 this.image = Methods.zoomImg(LoadImage.mario.get(i), Methods.getnewsize(), Methods.getnewsize()*2);
                 if (this.switchtime <= 0) {
@@ -113,17 +113,37 @@ public class Mario extends Sprite {
                     this.switchtime = 2;
                 }
                 if (i == 2) i = 0;
+            } else if (this.status == 2){
+                this.image = Methods.zoomImg(LoadImage.mario.get(i2), Methods.getnewsize(), Methods.getnewsize()*2);
+                if (this.switchtime <= 0) {
+                    i2++;
+                    this.switchtime = 2;
+                }
+                if(i2 == 6){i2 = 4;}
+            } else if (this.status == 3){
+                this.image = Methods.zoomImg(LoadImage.mario.get(i3), Methods.getnewsize(), Methods.getnewsize()*2);
+                if (this.switchtime <= 0) {
+                    i3++;
+                    this.switchtime = 2;
+                }
+                if(i3 == 10){i3 = 8;}
             }
         }
-        else if (this.state.equals("Rstop") || this.state.equals("Lstop")) {
+        else if (this.state.equals("Rstop")&&!this.jumpstate.equals("jumping") || this.state.equals("Lstop")&&!this.jumpstate.equals("jumping")) {
             if (this.status == 1) {
                 this.image = Methods.zoomImg(LoadImage.mario.get(0),Methods.getnewsize(),Methods.getnewsize()*2);
+            }else if(this.status == 2) {
+                this.image = Methods.zoomImg(LoadImage.mario.get(4),Methods.getnewsize(),Methods.getnewsize()*2);
+            }else if(this.status == 3){
+                this.image = Methods.zoomImg(LoadImage.mario.get(8),Methods.getnewsize(),Methods.getnewsize()*2);
             }
-        }
-        else if(this.jumpstate.equals("jumping"))
-        {
-            if(this.status == 1){
-                this.image = LoadImage.mario.get(2);
+        }else if(this.jumpstate.equals("jumping")) {
+            if (this.status == 1) {
+                this.image = Methods.zoomImg(LoadImage.mario.get(2), Methods.getnewsize(), Methods.getnewsize() * 2);
+            } else if (this.status == 2) {
+                this.image = Methods.zoomImg(LoadImage.mario.get(6), Methods.getnewsize(), Methods.getnewsize() * 2);
+            } else if (this.status == 3) {
+                this.image = Methods.zoomImg(LoadImage.mario.get(10), Methods.getnewsize(), Methods.getnewsize() * 2);
             }
         }
     }
