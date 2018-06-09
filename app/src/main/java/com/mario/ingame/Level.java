@@ -1,6 +1,8 @@
 package com.mario.ingame;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 
 import com.mario.load.LoadImage;
 
@@ -14,16 +16,21 @@ public class Level {
 
         private ArrayList<Tile> tile = new ArrayList<Tile>();
 
-        public ArrayList<Tile> getTile()
-        {
-            return tile;
-        }
-
-        public int getLevel() {
-            return Level;
-        }
-
+        private ArrayList<Background> bk = new ArrayList<Background>();
         static ArrayList<Sprite> item = new ArrayList<Sprite>();
+        private Bitmap backimg;
+        private static Canvas canvas;
+        public ArrayList<Tile> getTile()
+    {
+        return tile;
+    }
+        public int getLevel() {
+        return Level;
+    }
+
+        public ArrayList<Background> getBk() {
+            return bk;
+        }
 
         public Level(int level)
         {
@@ -34,7 +41,13 @@ public class Level {
                 case 1:
 
                     this.CreatTile(Test.Level1_map0);
-
+                    backimg = Bitmap.createBitmap(Methods.getScreenWidth()*Test.getcolumn(1)/20,Methods.getScreenHeight(), Bitmap.Config.ARGB_8888);
+                    canvas = new Canvas(backimg);
+                    canvas.drawColor(Color.WHITE);
+                    for (int i = 0; i < 15 ; i++) {
+                        canvas.drawBitmap(LoadImage.map.get(level), Methods.getScreenWidth()*i,   0 ,null);
+                    }
+                    this.bk.add(new Background(0,0,backimg));
                     break;
             }
 

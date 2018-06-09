@@ -1,11 +1,22 @@
 package com.mario.ingame;
 
+import java.util.ArrayList;
+
 public class Test {
 
     public static int[][] getmaparray(int index) {
-        if(index == 1)return Level1_map0;
-        return Level1_map0;
+        int map[][] = Level1_map0;
+        if(index == 1){map = Level1_map0;}
+        return map;
     }
+
+    public static int getcolumn(int index){
+        int map[][] = Level1_map0;
+        if(index == 1){map = Level1_map0;}
+        return map[0].length;
+    }
+
+    ArrayList<int[][]> maps = new ArrayList();
 
     static int Level1_map0[][] = {
             { 147, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

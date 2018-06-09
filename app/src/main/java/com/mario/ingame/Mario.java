@@ -13,18 +13,22 @@ public class Mario extends Sprite {
     private int xSpeed, ySpeed;
     private int status;
     private int lives;
+
+
+
     private String state;
     private int i;
     private int switchtime;
     private Rect frame;
-    private boolean landed,canleft,canright;
+    boolean landed,canleft,canright;
     private String jumpstate;
     private int jumptime;
+    int shiftspeed;
 
     public void setState(String state) {
         this.state = state;
     }
-
+    public String getState() { return state; }
 
     public Mario(float x, float y, Bitmap image) {
         super(x, y, image);
@@ -53,12 +57,15 @@ public class Mario extends Sprite {
 
     public void Move(InGameView gv){
         if(this.hp < 0) return;
+        shiftspeed = 0;
         if(state.equals("Rmove")&&canright) {
             if (this.x < Methods.getScreenWidth() / 2) {
                 this.x += this.xSpeed;
             } else {
                 if (Tile.getMovecount() < (Test.getmaparray(gv.getCurrentLevel().getLevel())[0].length-1) * Methods.getnewsize() - Methods.getScreenWidth()) {
                     Tile.Shift(gv, this.state, this.xSpeed);
+                    shiftspeed = -xSpeed;
+                    gv.getCurrentLevel().getBk().get(0).Shift("L");
                 } else {
                     if (this.x < Methods.getScreenWidth() - this.image.getWidth()) {
                         this.x += this.xSpeed;
@@ -73,6 +80,8 @@ public class Mario extends Sprite {
             else {
                 if(Tile.getMovecount()> 0) {
                     Tile.Shift(gv, this.state, this.xSpeed);
+                    shiftspeed = xSpeed;
+                    gv.getCurrentLevel().getBk().get(0).Shift("R");
                 }
                 else {
                     if(this.x > 0) {
@@ -139,9 +148,17 @@ public class Mario extends Sprite {
                         jumptime = 0;
                         t.setJumpTime(1);
                         if(t.getType() == 21){
-                            if(t.getCollision() > 0)
-                            Level.item.add(new Item(t.x,t.y,Methods.zoomImg(LoadImage.food.get(1),Methods.getnewsize(),Methods.getnewsize()),1, t));
-                            t.setCollision(t.getCollision()-1);
+                            if(t.getCollision() > 0){
+                                switch(this.status){
+                                    case 1:
+                                        Level.item.add(new Item(t.x,t.y,Methods.zoomImg(LoadImage.food.get(0),Methods.getnewsize(),Methods.getnewsize()),2, t));
+                                        break;
+                                    case 2:
+                                        Level.item.add(new Item(t.x,t.y,Methods.zoomImg(LoadImage.food.get(1),Methods.getnewsize(),Methods.getnewsize()),1, t));
+                                        break;
+                                }
+                                t.setCollision(t.getCollision()-1);
+                            }
                         }
 
                     }

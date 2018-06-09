@@ -52,7 +52,6 @@ public class InGameView extends GameView implements Runnable {
 
         currentLevel = levels.get(0);
 
-
         mario = new Mario(Methods.getnewsize(),Methods.getScreenHeight()-5  *Methods.getnewsize(),Methods.zoomImg(LoadImage.mario.get(0),Methods.getnewsize(),Methods.getnewsize()*2));
     }
 
@@ -79,7 +78,9 @@ public class InGameView extends GameView implements Runnable {
         this.canvas = sh.lockCanvas();
         if(canvas != null)
         {
-            canvas.drawBitmap(LoadImage.map.get(0), 0, 0, null);
+            for (Background bk:currentLevel.getBk()) {
+                bk.Draw(canvas);
+            }
             for(int i=0; i<currentLevel.getTile().size(); i++)
             {
                 Tile drawtile = currentLevel.getTile().get(i);
@@ -89,13 +90,14 @@ public class InGameView extends GameView implements Runnable {
                     drawtile.Jump();
                 }
             }
-
+            canvas.drawText(String.valueOf(Background.speed), 330, 430, paint);
             for (Sprite s: Level.item) {
                 if(s instanceof Item){
                     Item it = (Item)s;
                     it.Jump();
                     it.Draw(canvas);
                     it.SwitchImage();
+                    it.Move(this);
                 }
             }
 
@@ -169,6 +171,7 @@ public class InGameView extends GameView implements Runnable {
         while(flag)
         {
             mario.Collision(this);
+            Background.Stop(mario);
             mario.Jump();
             this.Draw();
             try {
