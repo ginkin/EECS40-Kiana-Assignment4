@@ -59,7 +59,7 @@ public class Tile extends Sprite {
                 break;
 
             case 37:
-                this.i = new Random().nextInt(6) + 1;
+                this.collision = 1;
                 break;
         }
 
@@ -141,6 +141,13 @@ public class Tile extends Sprite {
                 image = Methods.zoomImg(LoadImage.tile.get(i),Methods.getnewsize(),Methods.getnewsize());
                 TimeToSwitch();
                 if(i > 11 ) {i = 8;}
+                break;
+            case 37: // Coin Block
+                if(this.collision > 0){
+                    image = Methods.zoomImg(LoadImage.tile.get(6),Methods.getnewsize(),Methods.getnewsize());
+                }else{
+                    image = Methods.zoomImg(LoadImage.tile.get(7),Methods.getnewsize(),Methods.getnewsize());
+                }
                 break;
         }
     }

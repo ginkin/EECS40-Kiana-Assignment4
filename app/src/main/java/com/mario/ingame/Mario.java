@@ -6,6 +6,8 @@ import android.graphics.Rect;
 import android.view.KeyEvent;
 import com.mario.load.LoadImage;
 
+import java.util.ArrayList;
+
 import game.sprite.Sprite;
 
 public class Mario extends Sprite {
@@ -27,8 +29,11 @@ public class Mario extends Sprite {
     private int jumptime;
     int shiftspeed;
 
+    private ArrayList<FireBall> fb = new ArrayList<FireBall>();
+
     public void setState(String state) { this.state = state; }
     public String getState() { return state; }
+    public ArrayList<FireBall> getFireBall() { return fb; }
 
     public Mario(float x, float y, Bitmap image) {
         super(x, y, image);
@@ -63,8 +68,8 @@ public class Mario extends Sprite {
                 this.x += this.xSpeed;
             } else {
                 if (Tile.getMovecount() < (Test.getmaparray(gv.getCurrentLevel().getLevel())[0].length-1) * Methods.getnewsize() - Methods.getScreenWidth()) {
-                    Tile.Shift(gv, this.state, this.xSpeed);
                     shiftspeed = -xSpeed;
+                    Tile.Shift(gv, this.state, this.xSpeed);
                     gv.getCurrentLevel().getBk().get(0).Shift("L");
                 } else {
                     if (this.x < Methods.getScreenWidth() - this.image.getWidth()) {
@@ -79,8 +84,8 @@ public class Mario extends Sprite {
             }
             else {
                 if(Tile.getMovecount()> 0) {
-                    Tile.Shift(gv, this.state, this.xSpeed);
                     shiftspeed = xSpeed;
+                    Tile.Shift(gv, this.state, this.xSpeed);
                     gv.getCurrentLevel().getBk().get(0).Shift("R");
                 }
                 else {
@@ -176,7 +181,16 @@ public class Mario extends Sprite {
                                     case 2:
                                         Level.item.add(new Item(t.x,t.y,Methods.zoomImg(LoadImage.food.get(1),Methods.getnewsize(),Methods.getnewsize()),1, t));
                                         break;
+                                    case 3:
+                                        Level.item.add(new Item(t.x,t.y,Methods.zoomImg(LoadImage.food.get(1),Methods.getnewsize(),Methods.getnewsize()),1, t));
+                                        break;
                                 }
+                                t.setCollision(t.getCollision()-1);
+                            }
+                        }
+                        if(t.getType() == 37){
+                            if(t.getCollision() > 0){
+                                        Level.item.add(new Item(t.x,t.y,Methods.zoomImg(LoadImage.coin.get(0),Methods.getnewsize(),Methods.getnewsize()),3, t));
                                 t.setCollision(t.getCollision()-1);
                             }
                         }
@@ -215,4 +229,16 @@ public class Mario extends Sprite {
         }
     }
 
+
+    public void Fire(){
+        int firespeed;
+        if(state.indexOf("R")!=-1){
+            firespeed = Methods.getnewsize()/4;
+        }else{
+            firespeed = -Methods.getnewsize()/4;
+        }
+        if(fb.size()<1 && status==3){
+            fb.add(new FireBall(x+ image.getWidth()/2,y+image.getHeight()/2,Methods.zoomImg(LoadImage.weapon.get(0),Methods.getnewsize()/2,Methods.getnewsize()/2),firespeed));
+        }
+    }
 }

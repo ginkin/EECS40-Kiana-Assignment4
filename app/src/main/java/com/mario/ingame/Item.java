@@ -12,7 +12,7 @@ public class Item extends Tile {
     public int Gettype() { return type; }
     public int getJump() { return jump; }
     int type;
-    private int i,i2;
+    private int i,i2,i3;
     private String direction;
     private Tile t;
     private boolean landed,canleft,canright;
@@ -21,6 +21,7 @@ public class Item extends Tile {
 
     //type1 = Fire Flower
     //type2 = mushroom
+    //type3 = coin
 
     public Item(float x, float y, Bitmap image, int type, Tile t) {
         super(x, y, image, type);
@@ -37,7 +38,7 @@ public class Item extends Tile {
             jump+=2;
             if(type==2)this.x =t.x;
         }
-        if(type==1)this.x = t.x;
+        if(type==1||type==3)this.x = t.x;
     }
 
     public void Move(InGameView gv){
@@ -88,6 +89,11 @@ public class Item extends Tile {
             image = Methods.zoomImg(LoadImage.food.get(i), Methods.getnewsize(), Methods.getnewsize());
             i++;
             if (i == 3) i = 1;
+        }
+        if(this.type == 3) {
+            image = Methods.zoomImg(LoadImage.coin.get(i3), Methods.getnewsize(), Methods.getnewsize());
+            i3++;
+            if (i3 == 3) i3 = 0;
         }
     }
 

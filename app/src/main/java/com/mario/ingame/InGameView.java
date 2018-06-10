@@ -31,6 +31,8 @@ public class InGameView extends GameView implements Runnable {
 
     private int mActivePointerId;
 
+    private int points = 0;
+
     public Mario getMario() {
         return mario;
     }
@@ -90,7 +92,9 @@ public class InGameView extends GameView implements Runnable {
                     drawtile.Jump();
                 }
             }
-            canvas.drawText(String.valueOf(Background.speed), 330, 430, paint);
+            paint.setColor(Color.WHITE);
+            paint.setTextSize(Methods.getnewsize()/2);
+            canvas.drawText("Score: "+String.valueOf(points), Methods.getScreenWidth()/2, Methods.getnewsize()/2, paint);
             for (Sprite s: Level.item) {
                 if(s.hp>0){
                     Item it = (Item)s;
@@ -100,6 +104,20 @@ public class InGameView extends GameView implements Runnable {
                     it.Move(this);
                 }else{
                     Level.item.remove(s);
+                }
+            }
+
+            for (FireBall fb: mario.getFireBall()) {
+                if(fb.hp > 0)
+                {
+                    fb.Collision(this);
+                    fb.Rotation();
+                    fb.Draw(canvas,paint);
+                    fb.Move(mario.shiftspeed);
+                }
+                else
+                {
+                    this.mario.getFireBall().remove(fb);
                 }
             }
 
@@ -129,9 +147,10 @@ public class InGameView extends GameView implements Runnable {
                             {
                                 mario.status+=1;
                             }
+                            points+=1000;
                         }
                     }
-                } else if(it.type == 1){
+                }else if(it.type == 1){
                     if(it.getJump() == 16)
                     {
                         if(it.MoreRectangle_CollisionWithSprite(mario, mario.getFrame()))
@@ -141,6 +160,16 @@ public class InGameView extends GameView implements Runnable {
                             {
                                 mario.status+=1;
                             }
+                            points+=1000;
+                        }
+                    }
+                }else if(it.type == 3){
+                    if(it.getJump() == 16)
+                    {
+                        if(it.MoreRectangle_CollisionWithSprite(mario, mario.getFrame()))
+                        {
+                            it.hp = 0;
+                            points+=200;
                         }
                     }
                 }
@@ -191,6 +220,8 @@ public class InGameView extends GameView implements Runnable {
             mario.setState("Rmove");
         }else if(x>Methods.getScreenWidth()*5/6 && x<(Methods.getScreenWidth())){
             mario.JumpEvent();
+        }else if(x>Methods.getScreenWidth()*1/2 && x<(Methods.getScreenWidth()*5/6)){
+            mario.Fire();
         }
     }
 
