@@ -7,6 +7,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Bitmap;
 import android.content.res.Resources;
 
+import com.mario.ingame.Methods;
+
 import game.image.Image;
 
 
@@ -37,7 +39,9 @@ public class LoadImage {
             }
 
             for (int i = 1; i <= 12; i++) {
-                enemy.add(BitmapFactory.decodeStream(context.getAssets().open("enemy/enemy" + i + ".png")));
+                Bitmap m = BitmapFactory.decodeStream(context.getAssets().open("enemy/enemy" + i + ".png"));
+                m = Methods.zoomImg(m,Methods.getnewsize(),Methods.getnewsize());
+                enemy.add(m);
             }
 
             for (int i = 1; i <= 4; i++) {

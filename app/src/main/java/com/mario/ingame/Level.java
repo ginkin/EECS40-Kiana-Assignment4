@@ -17,7 +17,9 @@ public class Level {
         private ArrayList<Tile> tile = new ArrayList<Tile>();
 
         private ArrayList<Background> bk = new ArrayList<Background>();
-        static ArrayList<Sprite> item = new ArrayList<Sprite>();
+        static ArrayList<Item> item = new ArrayList<Item>();
+        private ArrayList<Enemy> enemy = new ArrayList<Enemy>();
+
         private Bitmap backimg;
         private static Canvas canvas;
         public ArrayList<Tile> getTile()
@@ -28,11 +30,19 @@ public class Level {
         return Level;
     }
 
-        public ArrayList<Background> getBk() {
+    public static ArrayList<Item> getItem() {
+        return item;
+    }
+
+    public ArrayList<Background> getBk() {
             return bk;
         }
 
-        public Level(int level)
+    public ArrayList<Enemy> getEnemy() {
+        return enemy;
+    }
+
+    public Level(int level)
         {
             Level = level;
 
@@ -41,6 +51,8 @@ public class Level {
                 case 1:
 
                     this.CreatTile(Test.Level1_map0);
+                    int wid = Methods.getScreenWidth()*Test.getcolumn(1)/20;
+                    int hid = Methods.getScreenHeight();
                     backimg = Bitmap.createBitmap(Methods.getScreenWidth()*Test.getcolumn(1)/20,Methods.getScreenHeight(), Bitmap.Config.ARGB_8888);
                     canvas = new Canvas(backimg);
                     canvas.drawColor(Color.WHITE);
@@ -48,6 +60,10 @@ public class Level {
                         canvas.drawBitmap(LoadImage.map.get(level-1), Methods.getScreenWidth()*i,   0 ,null);
                     }
                     this.bk.add(new Background(0,0,backimg));
+                    this.enemy.add(new Triangle(4*Methods.getnewsize(),9*Methods.getnewsize(),Methods.zoomImg(LoadImage.enemy.get(0),Methods.getnewsize(),Methods.getnewsize())));
+                    this.enemy.add(new Turtle(4*Methods.getnewsize(),4*Methods.getnewsize(),Methods.zoomImg(LoadImage.enemy.get(7),Methods.getnewsize(),Methods.getnewsize())));
+                    this.enemy.add(new Piranha((float)15.5*Methods.getnewsize(),9*Methods.getnewsize(),Methods.zoomImg(LoadImage.enemy.get(10),Methods.getnewsize(),Methods.getnewsize())));
+
                     break;
             }
 

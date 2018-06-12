@@ -15,6 +15,7 @@ import android.view.SurfaceHolder;
 import android.view.WindowManager;
 
 import com.mario.load.LoadImage;
+import com.mario.load.LoadView;
 
 import java.util.ArrayList;
 
@@ -94,6 +95,8 @@ public class InGameView extends GameView implements Runnable {
             }
             paint.setColor(Color.WHITE);
             paint.setTextSize(Methods.getnewsize()/2);
+            paint.setColor(Color.RED);
+            paint.setStrokeWidth(12);
             canvas.drawText("Score: "+String.valueOf(points), Methods.getScreenWidth()/2, Methods.getnewsize()/2, paint);
             for (Sprite s: Level.item) {
                 if(s.hp>0){
@@ -121,6 +124,23 @@ public class InGameView extends GameView implements Runnable {
                 }
             }
 
+            for(int i=0; i<this.currentLevel.getEnemy().size(); i++)
+            {
+                Enemy e = this.currentLevel.getEnemy().get(i);
+                if(e.hp > 0)
+                {
+                    e.Logic(this);
+                    e.Draw(canvas);
+                    e.Move();
+                    e.ChangeImage();
+                }
+                else
+                {
+                    this.currentLevel.getEnemy().remove(i);
+                }
+            }
+
+
             mario.Draw(canvas);
             mario.Move(this);
             mario.SwitchImage();
@@ -129,6 +149,74 @@ public class InGameView extends GameView implements Runnable {
         }
     }
 
+    public void EnemyCollision(){
+        mario.Collision(this);
+        if(this.mario.hp > 0)
+        {
+            for(int i=0; i<this.currentLevel.getEnemy().size(); i++)
+            {
+                Enemy e = this.currentLevel.getEnemy().get(i);
+
+                if(e.is(e, Methods.getScreenWidth(), Methods.getScreenHeight()))
+                {
+                    if(e.MoreRectangle_CollisionWithSprite(mario,mario.getFrame()))
+                    {
+                        System.out.println("mark");
+                        if(e.name.equals("Bloober"))
+                        {
+                            if(this.mario.status == 1)
+                            {
+                                System.out.println(mario.y + " " + mario.image.getHeight() +" "+ mario.getFrame().top+" " + e.y);
+                                if(mario.y + (mario.image.getHeight()/2 - mario.getFrame().top) < e.y && !mario.landed)
+                                {
+
+                                    mario.setJumptime(mario.getySpeed()/2);
+                                    e.Dead();
+                                }
+                                else
+                                {
+                                    mario.Dead();
+                                }
+                            }
+                        }
+                        else if(e.name.equals("Turtle"))
+                        {
+                            if(e.xSpeed != 0)
+                            {
+                                if(mario.y < e.y && !mario.landed)
+                                {
+                                    mario.setJumptime(mario.getySpeed()/2);
+                                    e.ChangeState();
+                                }
+                                else
+                                {
+                                    mario.Dead();
+                                }
+                            }
+                            else
+                            {
+                                e.xSpeed = Methods.getnewsize()/3;
+                                if(mario.x > e.x)
+                                {
+                                    e.dir = 1;
+                                }
+                                else
+                                {
+                                    e.dir = 2;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            mario.Dead();
+                        }
+
+                    }
+                }
+            }
+        }
+
+    }
     public void ItemCollision()
     {
         mario.Collision(this);
@@ -242,6 +330,7 @@ public class InGameView extends GameView implements Runnable {
         {
             mario.Collision(this);
             this.ItemCollision();
+            this.EnemyCollision();
             Background.Stop(mario);
             mario.Jump();
             this.Draw();

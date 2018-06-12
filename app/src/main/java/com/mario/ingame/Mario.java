@@ -34,6 +34,9 @@ public class Mario extends Sprite {
     public void setState(String state) { this.state = state; }
     public String getState() { return state; }
     public ArrayList<FireBall> getFireBall() { return fb; }
+    public int getJumptime(){return jumptime;}
+    public void setJumptime(int t){jumptime = t;}
+    public int getySpeed(){return ySpeed;}
 
     public Mario(float x, float y, Bitmap image) {
         super(x, y, image);
@@ -240,5 +243,9 @@ public class Mario extends Sprite {
         if(fb.size()<1 && status==3){
             fb.add(new FireBall(x+ image.getWidth()/2,y+image.getHeight()/2,Methods.zoomImg(LoadImage.weapon.get(0),Methods.getnewsize()/2,Methods.getnewsize()/2),firespeed));
         }
+    }
+
+    public void Dead(){
+        System.out.println("Dead");
     }
 }

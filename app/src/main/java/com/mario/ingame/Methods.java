@@ -24,7 +24,7 @@ public class Methods {
         // 获得图片的宽高
         int width = bm.getWidth();
         int height = bm.getHeight();
-        System.out.println(width+" "+height);
+        //System.out.println(width+" "+height);
         // 计算缩放比例
         float scaleWidth = ((float) newWidth) / width;
         float scaleHeight = ((float) newHeight) / height;

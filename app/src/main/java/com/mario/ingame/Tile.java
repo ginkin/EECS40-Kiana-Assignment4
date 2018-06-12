@@ -112,11 +112,24 @@ public class Tile extends Sprite {
             for (Tile t:gv.getCurrentLevel().getTile()) {
                 t.x -= speed;
             }
+            for (Enemy e:gv.getCurrentLevel().getEnemy()) {
+                e.x -= speed;
+            }
+            for(Item i:gv.getCurrentLevel().getItem()) {
+                i.x = i.x - speed;
+            }
+
             movecount += speed;
         }
         else if(state.equals("Lmove")){
             for (Tile t:gv.getCurrentLevel().getTile()) {
                 t.x += speed;
+            }
+            for (Enemy e:gv.getCurrentLevel().getEnemy()) {
+                e.x += speed;
+            }
+            for(Item i:gv.getCurrentLevel().getItem()) {
+                i.x = i.x + speed;
             }
             movecount -= speed;
         }
