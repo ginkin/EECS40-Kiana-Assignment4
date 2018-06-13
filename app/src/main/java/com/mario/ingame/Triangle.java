@@ -6,10 +6,13 @@ import android.graphics.Bitmap;
 public class Triangle extends Enemy implements Runnable{
 
     private int deadTime = 20;
+    private float startX,startY;
 
     public Triangle(float x, float y, Bitmap image)
     {
         super(x, y, image);
+        this.startX = x;
+        this.startY = y;
         this.hp = 1;
         this.name = "Bloober";
         this.index = 0;
@@ -58,7 +61,6 @@ public class Triangle extends Enemy implements Runnable{
         this.state = "flat";
         new Thread(this).start();
     }
-
 
 
     @Override

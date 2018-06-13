@@ -77,6 +77,9 @@ public class Enemy extends Sprite
     public void Dead(){
 
     }
+    public void Dead2(){
+        this.hp = 0;
+    }
 
     //碰撞检测(类似马里奥的碰撞检测)
     public void Logic(InGameView mv)

@@ -17,6 +17,8 @@ import android.view.WindowManager;
 import com.mario.load.LoadImage;
 import com.mario.load.LoadView;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import game.sprite.Sprite;
@@ -24,11 +26,18 @@ import game.view.GameView;
 
 public class InGameView extends GameView implements Runnable {
 
-    private ArrayList<Level> levels = new ArrayList<Level>();
+    ArrayList<Level> levels = new ArrayList<Level>();
 
     private Level currentLevel;
 
+    boolean win,lose;
     private Mario mario;
+
+    public static final int GAME_ING = 0;
+    public static final int GAME_WIN = 1;
+    public static final int GAME_OVER = 2;
+    public static final int GAME_PANNEL = 3;
+    private int gameState = GAME_PANNEL;
 
     private int mActivePointerId;
 
@@ -42,13 +51,17 @@ public class InGameView extends GameView implements Runnable {
         return currentLevel;
     }
 
+    public void setCurrentLevel(Level currentLevel) {
+        this.currentLevel = currentLevel;
+    }
+
     public InGameView(Context context)
     {
         super(context);
         this.setKeepScreenOn(true);
         this.setFocusableInTouchMode(true);
 
-        for(int i=1; i<=1; i++)
+        for(int i=1; i<=2; i++)
         {
             levels.add(new Level(i));
         }
@@ -78,11 +91,33 @@ public class InGameView extends GameView implements Runnable {
 
     public void Draw()
     {
+        if (this.getCurrentLevel().goToNextLevelTime != 0) {this.getCurrentLevel().GotoNextLevel(this);return;}
         this.canvas = sh.lockCanvas();
+
         if(canvas != null)
         {
+            if(this.mario.y > Methods.getScreenHeight()*1.5)
+            {
+                mario.reborn();
+            }
+
             for (Background bk:currentLevel.getBk()) {
                 bk.Draw(canvas);
+            }
+            for(int i=0; i<this.currentLevel.getEnemy().size(); i++)
+            {
+                Enemy e = this.currentLevel.getEnemy().get(i);
+                if(e.hp > 0)
+                {
+                    e.Logic(this);
+                    e.Draw(canvas);
+                    e.Move();
+                    e.ChangeImage();
+                }
+                else
+                {
+                    this.currentLevel.getEnemy().remove(i);
+                }
             }
             for(int i=0; i<currentLevel.getTile().size(); i++)
             {
@@ -94,10 +129,12 @@ public class InGameView extends GameView implements Runnable {
                 }
             }
             paint.setColor(Color.WHITE);
-            paint.setTextSize(Methods.getnewsize()/2);
+            paint.setTextSize(Methods.getnewsize());
             paint.setColor(Color.RED);
-            paint.setStrokeWidth(12);
-            canvas.drawText("Score: "+String.valueOf(points), Methods.getScreenWidth()/2, Methods.getnewsize()/2, paint);
+            paint.setStrokeWidth(32);
+            canvas.drawText("Score: "+String.valueOf(points), Methods.getScreenWidth()/12*10- Methods.getnewsize(),Methods.getnewsize(), paint);
+            canvas.drawText("Lives:"+String.valueOf(mario.getLives()), Methods.getScreenWidth()/12- Methods.getnewsize(),Methods.getnewsize(),paint);
+            canvas.drawText("Level:"+String.valueOf(currentLevel.getLevel()),Methods.getScreenWidth()/2- Methods.getnewsize(), Methods.getnewsize(),paint);
             for (Sprite s: Level.item) {
                 if(s.hp>0){
                     Item it = (Item)s;
@@ -123,35 +160,26 @@ public class InGameView extends GameView implements Runnable {
                     this.mario.getFireBall().remove(fb);
                 }
             }
-
-            for(int i=0; i<this.currentLevel.getEnemy().size(); i++)
-            {
-                Enemy e = this.currentLevel.getEnemy().get(i);
-                if(e.hp > 0)
-                {
-                    e.Logic(this);
-                    e.Draw(canvas);
-                    e.Move();
-                    e.ChangeImage();
-                }
-                else
-                {
-                    this.currentLevel.getEnemy().remove(i);
-                }
-            }
-
-
             mario.Draw(canvas);
             mario.Move(this);
             mario.SwitchImage();
-
+            if (mario.x>Methods.getScreenWidth()/2+Methods.getnewsize()*2) {
+                this.getCurrentLevel().isWin = true;
+                this.getCurrentLevel().goToNextLevelTime = 100;
+                canvas.drawBitmap(Methods.zoomImg(LoadImage.ui.get(2),Methods.getScreenWidth(),Methods.getScreenHeight()),0,0,null);
+                paint.setColor(Color.RED);
+                paint.setTextSize((float)(Methods.getnewsize()*1.5));
+                paint.setStrokeWidth(Methods.getScreenWidth()/2);
+                canvas.drawText("Going to next Level",Methods.getnewsize()*6,Methods.getScreenHeight()/2-Methods.getnewsize()*1,paint);
+            }
+            this.currentLevel.GotoNextLevel(this);
             this.sh.unlockCanvasAndPost(canvas);
         }
     }
 
     public void EnemyCollision(){
         mario.Collision(this);
-        if(this.mario.hp > 0)
+        if(this.mario.hp > 0 && !(this.mario.getNoCheckCollisionTime()>0))
         {
             for(int i=0; i<this.currentLevel.getEnemy().size(); i++)
             {
@@ -164,22 +192,18 @@ public class InGameView extends GameView implements Runnable {
                         System.out.println("mark");
                         if(e.name.equals("Bloober"))
                         {
-                            if(this.mario.status == 1)
+                            if(mario.y + (mario.image.getHeight()/2 - mario.getFrame().top) < e.y && !mario.landed)
                             {
-                                System.out.println(mario.y + " " + mario.image.getHeight() +" "+ mario.getFrame().top+" " + e.y);
-                                if(mario.y + (mario.image.getHeight()/2 - mario.getFrame().top) < e.y && !mario.landed)
-                                {
-
-                                    mario.setJumptime(mario.getySpeed()/2);
-                                    e.Dead();
-                                }
-                                else
-                                {
-                                    mario.Dead();
-                                }
+                                mario.setJumptime(mario.getySpeed()/2);
+                                e.Dead();
                             }
+                            else
+                            {
+                                mario.Dead();
+                            }
+
                         }
-                        else if(e.name.equals("Turtle"))
+                        else if(e.name.equals("Turtle") || e.name.equals("shell"))
                         {
                             if(e.xSpeed != 0)
                             {
@@ -217,6 +241,27 @@ public class InGameView extends GameView implements Runnable {
         }
 
     }
+
+    public void FireballCollision(){
+        for(int i=0; i<mario.getFb().size(); i++)
+        {
+            FireBall b = mario.getFb().get(i);
+
+            for(int j=0; j<this.currentLevel.getEnemy().size(); j++)
+            {
+                Enemy e = this.currentLevel.getEnemy().get(j);
+                if(b.Rectangle_CollisionWithSprite(e))
+                {
+                    b.hp = 0;
+                    if (!e.name.equals("shell")){
+                        e.Dead2();
+                    }
+                }
+            }
+        }
+
+    }
+
     public void ItemCollision()
     {
         mario.Collision(this);
@@ -266,7 +311,6 @@ public class InGameView extends GameView implements Runnable {
     }
 
     public boolean onTouchEvent(MotionEvent e){
-
         mActivePointerId = e.getPointerId(0);
         int pointerCount = e.getPointerCount();
 
@@ -331,6 +375,7 @@ public class InGameView extends GameView implements Runnable {
             mario.Collision(this);
             this.ItemCollision();
             this.EnemyCollision();
+            this.FireballCollision();
             Background.Stop(mario);
             mario.Jump();
             this.Draw();

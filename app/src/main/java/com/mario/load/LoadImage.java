@@ -71,7 +71,7 @@ public class LoadImage {
                 weapon.add(BitmapFactory.decodeStream(context.getAssets().open("weapon/weapon" + i + ".png")));
             }
 
-            for (int i = 1; i <= 2; i++) {
+            for (int i = 1; i <= 3; i++) {
                 ui.add(BitmapFactory.decodeStream(context.getAssets().open("ui/ui" + i + ".png")));
             }
         } catch (IOException e) {

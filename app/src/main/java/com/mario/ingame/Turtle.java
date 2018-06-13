@@ -6,17 +6,19 @@ import android.graphics.Bitmap;
 public class Turtle extends Enemy
 {
     private int changeStateTime = 150;
-
+    private float startX,startY;
     public Turtle(float x, float y, Bitmap image)
     {
         super(x, y, image);
+        this.startX = x;
+        this.startY = y;
         this.name = "Turtle";
         this.state = "move";
         this.hp = 1;
         this.index = 7;
         this.xSpeed = Methods.getnewsize()/6;
         this.changeTime = 4;
-        this.dir = 1;
+        this.dir = 2;
     }
 
     //切图
@@ -43,6 +45,7 @@ public class Turtle extends Enemy
     {
         this.xSpeed = 0;
         this.state = "stop";
+        this.name = "shell";
     }
 
 
@@ -75,6 +78,4 @@ public class Turtle extends Enemy
             this.x+=this.xSpeed;
         }
     }
-
-
 }

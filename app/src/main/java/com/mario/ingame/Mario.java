@@ -12,13 +12,13 @@ import game.sprite.Sprite;
 
 public class Mario extends Sprite {
 
-    private int xSpeed, ySpeed;
+    int xSpeed, ySpeed;
 
-
+    float startX,startY;
 
     public int status;
     private int lives;
-    private String state;
+    public String state;
     private int i,i2,i3;
     private int switchtime;
 
@@ -28,6 +28,8 @@ public class Mario extends Sprite {
     private String jumpstate;
     private int jumptime;
     int shiftspeed;
+    private boolean immune;
+    private int noCheckCollisionTime;
 
     private ArrayList<FireBall> fb = new ArrayList<FireBall>();
 
@@ -37,34 +39,54 @@ public class Mario extends Sprite {
     public int getJumptime(){return jumptime;}
     public void setJumptime(int t){jumptime = t;}
     public int getySpeed(){return ySpeed;}
+    public boolean isImmune() {
+        return immune;
+    }
+    public void setImmune(boolean immune) {
+        this.immune = immune;
+    }
+    public int getNoCheckCollisionTime() {
+        return noCheckCollisionTime;
+    }
+    public ArrayList<FireBall> getFb() {
+        return fb;
+    }
+    public int getLives() {
+        return lives;
+    }
 
     public Mario(float x, float y, Bitmap image) {
         super(x, y, image);
+        this.startX = x;
+        this.startY = y;
         this.status = 1;
         this.hp = 1;
-        this.xSpeed = Methods.getnewsize()/4;
+        this.xSpeed = Methods.getnewsize()/4*4;
         this.lives = 3;
         this.switchtime = 2;
         this.state = "Rstop";
         this.frame = new Rect(0,11/16*Methods.getnewsize(),Methods.getnewsize(),2*Methods.getnewsize());
         this.jumpstate = "";
+        this.immune = false;
     }
 
     public void Draw(Canvas canvas) {
-        if (this.state.indexOf("L") != -1) {
-            canvas.save();
-            canvas.scale(-1, 1, x + image.getWidth() / 2, y + image.getHeight() / 2);
-            canvas.drawBitmap(image, x, y, null);
-            canvas.restore();
-        }
-        else
-        {
-            canvas.drawBitmap(image, x, y, null);
+        if(this.noCheckCollisionTime > 0) this.noCheckCollisionTime --;
+
+        if(this.noCheckCollisionTime % 2 == 0) {
+            if (this.state.indexOf("L") != -1) {
+                canvas.save();
+                canvas.scale(-1, 1, x + image.getWidth() / 2, y + image.getHeight() / 2);
+                canvas.drawBitmap(image, x, y, null);
+                canvas.restore();
+            } else {
+                canvas.drawBitmap(image, x, y, null);
+            }
         }
     }
 
     public void Move(InGameView gv){
-        if(this.hp < 0) return;
+        if(this.hp <= 0) return;
         shiftspeed = 0;
         if(state.equals("Rmove")&&canright) {
             if (this.x < Methods.getScreenWidth() / 2) {
@@ -101,7 +123,7 @@ public class Mario extends Sprite {
     }
 
     public void JumpEvent(){
-        if(this.hp < 0) return;
+        if(this.hp <=0) return;
         if(jumpstate.equals("")){
             jumptime = 15;
             ySpeed = Methods.getnewsize()/2;
@@ -110,7 +132,7 @@ public class Mario extends Sprite {
     }
 
     public void SwitchImage() {
-        if (this.hp < 0) return;
+        if (this.hp <= 0) return;
 
         switchtime--;
         if (this.state.equals("Rmove") &&!this.jumpstate.equals("jumping")|| this.state.equals("Lmove")&&!this.jumpstate.equals("jumping")) {
@@ -160,6 +182,8 @@ public class Mario extends Sprite {
         landed = false;
         canleft = true;
         canright = true;
+        if (this.hp <= 0) return;
+
         for (Tile t: gv.getCurrentLevel().getTile()) {
             if(t.x > x - image.getWidth()*2 && t.x < x + image.getWidth()*2){
                 if(t.MoreRectangle_CollisionWithSprite(this, frame)){
@@ -197,6 +221,9 @@ public class Mario extends Sprite {
                                 t.setCollision(t.getCollision()-1);
                             }
                         }
+                        if (t.getType() == 77 || t.getType() == 93){
+                            gv.getCurrentLevel().isWin = true;
+                        }
 
                     }
 
@@ -230,6 +257,10 @@ public class Mario extends Sprite {
             if(this.ySpeed > 0) this.ySpeed--;
             jumptime --;
         }
+        if (this.y>Methods.getScreenHeight()){
+            this.hp = 0;
+            reborn();
+        }
     }
 
 
@@ -246,6 +277,32 @@ public class Mario extends Sprite {
     }
 
     public void Dead(){
-        System.out.println("Dead");
+        if(this.status > 1)
+        {
+            this.status = 1;
+            this.noCheckCollisionTime = 100;
+        }
+        else
+        {
+            this.hp = 0;
+            this.jumptime = 11;
+            this.ySpeed = 11;
+            this.image = Methods.zoomImg(LoadImage.mario.get(12), Methods.getnewsize(), Methods.getnewsize());
+        }
+
     }
+
+    public void reborn(){
+        if(this.hp == 0 && this.y > Methods.getScreenHeight())
+        {
+            this.lives--;
+            this.y = 2*Methods.getnewsize();
+            this.hp = 1;
+            this.status = 1;
+            this.state = "Rstop";
+            this.image = Methods.zoomImg(LoadImage.mario.get(0), Methods.getnewsize(), Methods.getnewsize()*2);
+        }
+
+    }
+
 }

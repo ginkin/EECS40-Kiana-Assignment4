@@ -20,7 +20,7 @@ public class Tile extends Sprite {
     private int type;
     private int i,i2;
     private int switchtime = 4;
-    private static int movecount;
+    static int movecount;
 
     private int jumptime;
 

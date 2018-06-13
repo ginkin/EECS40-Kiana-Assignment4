@@ -13,17 +13,20 @@ public class Piranha extends Enemy
 
     //updownmove数组累计
     private int count;
+    private float startX,startY;
+
 
     public Piranha(float x, float y, Bitmap image)
     {
         super(x, y, image);
+        this.startX = x;
+        this.startY = y;
         this.dir = 1;
         this.index = 10;
         this.ySpeed = Methods.getnewsize()/12;
         this.hp = 1;
         this.name = "Piranha";
     }
-
 
     public void Move()
     {

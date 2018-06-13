@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.view.KeyEvent;
 import android.view.SurfaceHolder;
 
+import com.mario.ingame.Methods;
+
 import game.view.GameView;
 
 public class LoadView extends GameView implements Runnable{
@@ -30,10 +32,8 @@ public class LoadView extends GameView implements Runnable{
     public void Draw(){
         this.canvas = sh.lockCanvas();
         if (canvas != null){
-            canvas.drawColor(Color.BLUE);
-            paint.setColor(Color.YELLOW);
-            paint.setTextSize(100);
-            canvas.drawText(""+ LoadImage.mario.size(), 500, 500, paint);
+            canvas.drawBitmap(Methods.zoomImg(LoadImage.ui.get(0),Methods.getScreenWidth(),Methods.getScreenHeight()),0,0,null);
+
             this.sh.unlockCanvasAndPost(canvas);
         }
     }
