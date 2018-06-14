@@ -60,7 +60,7 @@ public class Level {
                     canvas = new Canvas(backimg);
                     canvas.drawColor(Color.WHITE);
                     for (int i = 0; i < 15 ; i++) {
-                        canvas.drawBitmap(LoadImage.map.get(0), Methods.getScreenWidth()*i,   0 ,null);
+                        canvas.drawBitmap(Methods.zoomImg(LoadImage.map.get(Level-1),Methods.getScreenWidth(),Methods.getScreenHeight()), Methods.getScreenWidth()*i,   0 ,null);
                     }
                     this.bk.add(new Background(0,0,backimg));
                     this.enemy.add(new Triangle(4*Methods.getnewsize(),11*Methods.getnewsize(),Methods.zoomImg(LoadImage.enemy.get(0),Methods.getnewsize(),Methods.getnewsize())));
@@ -77,7 +77,24 @@ public class Level {
                     canvas = new Canvas(backimg);
                     canvas.drawColor(Color.WHITE);
                     for (int i = 0; i < 15 ; i++) {
-                        canvas.drawBitmap(LoadImage.map.get(0), Methods.getScreenWidth()*i,   0 ,null);
+                        canvas.drawBitmap(Methods.zoomImg(LoadImage.map.get(Level-1),Methods.getScreenWidth(),Methods.getScreenHeight()), Methods.getScreenWidth()*i,   0 ,null);
+                    }
+                    this.bk.add(new Background(0,0,backimg));
+                    this.enemy.add(new Triangle(4*Methods.getnewsize(),11*Methods.getnewsize(),Methods.zoomImg(LoadImage.enemy.get(0),Methods.getnewsize(),Methods.getnewsize())));
+                    this.enemy.add(new Turtle(7*Methods.getnewsize(),11*Methods.getnewsize(),Methods.zoomImg(LoadImage.enemy.get(7),Methods.getnewsize(),Methods.getnewsize())));
+                    this.enemy.add(new Piranha((float)34.5*Methods.getnewsize(),(float)11.3*Methods.getnewsize(),Methods.zoomImg(LoadImage.enemy.get(10),Methods.getnewsize(),Methods.getnewsize())));
+
+                    break;
+                case 3:
+
+                    this.CreateTile(Test.Level1_map0);
+                    wid = Methods.getScreenWidth()*Test.getcolumn(1)/20;
+                    hid = Methods.getScreenHeight();
+                    backimg = Bitmap.createBitmap(Methods.getScreenWidth()*Test.getcolumn(1)/20,Methods.getScreenHeight(), Bitmap.Config.ARGB_8888);
+                    canvas = new Canvas(backimg);
+                    canvas.drawColor(Color.WHITE);
+                    for (int i = 0; i < 15 ; i++) {
+                        canvas.drawBitmap(Methods.zoomImg(LoadImage.map.get(Level-1),Methods.getScreenWidth(),Methods.getScreenHeight()), Methods.getScreenWidth()*i,   0 ,null);
                     }
                     this.bk.add(new Background(0,0,backimg));
                     this.enemy.add(new Triangle(4*Methods.getnewsize(),11*Methods.getnewsize(),Methods.zoomImg(LoadImage.enemy.get(0),Methods.getnewsize(),Methods.getnewsize())));

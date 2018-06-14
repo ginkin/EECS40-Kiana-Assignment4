@@ -2,6 +2,7 @@ package com.mario.ingame;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -16,6 +17,8 @@ import android.view.WindowManager;
 
 import com.mario.load.LoadImage;
 import com.mario.load.LoadView;
+import com.mario.menu.Menu;
+import com.mario.menu.MenuView;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Method;
@@ -30,7 +33,7 @@ public class InGameView extends GameView implements Runnable {
 
     private Level currentLevel;
 
-    boolean win,lose;
+    boolean win,end;
     private Mario mario;
 
     public static final int GAME_ING = 0;
@@ -40,6 +43,7 @@ public class InGameView extends GameView implements Runnable {
     private int gameState = GAME_PANNEL;
 
     private int mActivePointerId;
+    private int gameoverTime = 100;
 
     private int points = 0;
 
@@ -61,7 +65,7 @@ public class InGameView extends GameView implements Runnable {
         this.setKeepScreenOn(true);
         this.setFocusableInTouchMode(true);
 
-        for(int i=1; i<=2; i++)
+        for(int i=1; i<=3; i++)
         {
             levels.add(new Level(i));
         }
@@ -91,9 +95,22 @@ public class InGameView extends GameView implements Runnable {
 
     public void Draw()
     {
+        if (this.end == true) {this.BackToMenu();return;}
         if (this.getCurrentLevel().goToNextLevelTime != 0) {this.getCurrentLevel().GotoNextLevel(this);return;}
-        this.canvas = sh.lockCanvas();
 
+        if(mario.getLives() == 0){
+            if (gameoverTime != 100) {this.BackToMenu();return;}
+            this.canvas = sh.lockCanvas();
+            canvas.drawBitmap(Methods.zoomImg(LoadImage.ui.get(2),Methods.getScreenWidth(),Methods.getScreenHeight()),0,0,null);
+            paint.setColor(Color.RED);
+            paint.setTextSize((float)(Methods.getnewsize()*1.5));
+            paint.setStrokeWidth(Methods.getScreenWidth()/2);
+            canvas.drawText("Game Over",(float)(Methods.getScreenWidth()/2-Methods.getnewsize()*3.5),Methods.getScreenHeight()/2,paint);
+            sh.unlockCanvasAndPost(canvas);
+            this.BackToMenu();
+            return;
+        }
+        this.canvas = sh.lockCanvas();
         if(canvas != null)
         {
             if(this.mario.y > Methods.getScreenHeight()*1.5)
@@ -164,13 +181,26 @@ public class InGameView extends GameView implements Runnable {
             mario.Move(this);
             mario.SwitchImage();
             if (mario.x>Methods.getScreenWidth()/2+Methods.getnewsize()*2) {
-                this.getCurrentLevel().isWin = true;
-                this.getCurrentLevel().goToNextLevelTime = 100;
-                canvas.drawBitmap(Methods.zoomImg(LoadImage.ui.get(2),Methods.getScreenWidth(),Methods.getScreenHeight()),0,0,null);
-                paint.setColor(Color.RED);
-                paint.setTextSize((float)(Methods.getnewsize()*1.5));
-                paint.setStrokeWidth(Methods.getScreenWidth()/2);
-                canvas.drawText("Going to next Level",Methods.getnewsize()*6,Methods.getScreenHeight()/2-Methods.getnewsize()*1,paint);
+                if (this.getCurrentLevel().getLevel() != 3){
+                    this.getCurrentLevel().isWin = true;
+                    this.getCurrentLevel().goToNextLevelTime = 100;
+                    canvas.drawBitmap(Methods.zoomImg(LoadImage.ui.get(2),Methods.getScreenWidth(),Methods.getScreenHeight()),0,0,null);
+                    paint.setColor(Color.RED);
+                    paint.setTextSize((float)(Methods.getnewsize()*1.5));
+                    paint.setStrokeWidth(Methods.getScreenWidth()/2);
+                    canvas.drawText("Going to next Level",Methods.getnewsize()*6,Methods.getScreenHeight()/2,paint);
+                }else{
+                    this.end = true;
+                    canvas.drawBitmap(Methods.zoomImg(LoadImage.ui.get(2),Methods.getScreenWidth(),Methods.getScreenHeight()),0,0,null);
+                    paint.setColor(Color.RED);
+                    paint.setTextSize((float)(Methods.getnewsize()*1.5));
+                    paint.setStrokeWidth(Methods.getScreenWidth()/2);
+                    canvas.drawText("You Win!",(float)(Methods.getScreenWidth()/2-Methods.getnewsize()*2.5),(float)(Methods.getScreenHeight()/2-Methods.getnewsize()*0.5),paint);
+                    sh.unlockCanvasAndPost(canvas);
+                    this.BackToMenu();
+                    return;
+                }
+
             }
             this.currentLevel.GotoNextLevel(this);
             this.sh.unlockCanvasAndPost(canvas);
@@ -189,7 +219,6 @@ public class InGameView extends GameView implements Runnable {
                 {
                     if(e.MoreRectangle_CollisionWithSprite(mario,mario.getFrame()))
                     {
-                        System.out.println("mark");
                         if(e.name.equals("Bloober"))
                         {
                             if(mario.y + (mario.image.getHeight()/2 - mario.getFrame().top) < e.y && !mario.landed)
@@ -385,6 +414,24 @@ public class InGameView extends GameView implements Runnable {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void BackToMenu()
+    {
+        this.gameoverTime --;
+        if(this.gameoverTime == 0)
+        {
+            BackToMenuReady();
+        }
+    }
+
+    //退会菜单前的准备
+    public void BackToMenuReady()
+    {
+        Intent i = new Intent(this.getContext(),Menu.class);
+        this.getContext().startActivity(i);
+        Activity a = (Activity) this.getContext();
+        a.finish();
     }
 
 }
