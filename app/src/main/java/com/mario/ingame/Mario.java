@@ -61,7 +61,7 @@ public class Mario extends Sprite {
         this.startY = y;
         this.status = 1;
         this.hp = 1;
-        this.xSpeed = Methods.getnewsize()/4*4;
+        this.xSpeed = Methods.getnewsize()/4;
         this.lives = 3;
         this.switchtime = 2;
         this.state = "Rstop";
