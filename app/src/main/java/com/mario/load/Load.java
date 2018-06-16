@@ -13,6 +13,7 @@ public class Load extends GameActivity implements Runnable {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         this.SetScreenToFull();
         this.GetScreenSize();
+        LoadImage.LoadImage(this);
 
         super.onCreate(savedInstanceState);
         setContentView(new LoadView(this));
@@ -21,7 +22,6 @@ public class Load extends GameActivity implements Runnable {
 
     @Override
     public void run() {
-        LoadImage.LoadImage(this);
         try {
             Thread.sleep(1000);
             Intent GotoMenu = new Intent(this,Menu.class);
